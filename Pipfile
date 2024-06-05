@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+verify_ssl = true
+name = "pip_conf_index_global"
+
+[packages]
+requests = "*"
+pillow = "*"
+markdown = "*"
+bs4 = "*"
+frontmatter = "*"
+markdownify = "*"
+binx-og-image-generator = "*"
+slugify = "*"
+click = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"

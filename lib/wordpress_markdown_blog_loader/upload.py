@@ -1,13 +1,13 @@
+import click
 import logging
 import os
+import sys
+
 from difflib import diff_bytes, unified_diff
-
-import click
-
 from .api import Wordpress, Post
 from .blog import Blog
 from .check_links import check_links
-import sys
+from slugify import slugify
 
 
 def upsert_post(wp: Wordpress, blog: Blog) -> int:
@@ -24,6 +24,7 @@ def upsert_post(wp: Wordpress, blog: Blog) -> int:
         wp_post = blog.to_wordpress(wp)
         logging.info("updating blog '%s' %s", blog.title, post.link)
         post = wp.update_post(blog.guid, wp_post)
+        new_post = True
     else:
         existing_post = wp.get_post_by_slug(blog.slug)
         if existing_post:
@@ -36,6 +37,7 @@ def upsert_post(wp: Wordpress, blog: Blog) -> int:
         blog.guid = post.guid
         blog.save()
         logging.info("uploaded blog '%s' as post %s", blog.title, post.link)
+        new_post = False
 
     if blog.og_image:
         og_image = wp.upload_media(f"{blog.slug}-og-banner", blog.og_image_path)
@@ -63,7 +65,7 @@ def upsert_post(wp: Wordpress, blog: Blog) -> int:
         logging.warning("broken link in post: %s", broken)
     logging.info("post available at %s", post.link)
 
-    return 0
+    return blog.title, post.link, new_post
 
 
 @click.command(name="upload")
@@ -87,8 +89,10 @@ def command(host: str, blog: str, regenerate_og_image: bool):
     """
     blog = Blog.load(os.path.join(blog, "index.md"))
     if not blog.slug:
-        logging.error("slug is required for the blog in %s", blog)
-        exit(1)
+        blog.slug = slugify(blog.title)
+        logging.info("slug is generated from title for the blog in %s", blog)
+        #logging.error("slug is required for the blog in %s", blog)
+        #exit(1)
 
     if blog.image and (regenerate_og_image or not blog.og_image):
         logging.info("generating og:image based on %s", blog.image)
@@ -105,7 +109,8 @@ def command(host: str, blog: str, regenerate_og_image: bool):
     wordpress.connect()
 
     try:
-        upsert_post(wordpress, blog)
+        m_title, m_link = upsert_post(wordpress, blog)
+        return m_title, m_link
     except ValueError as exception:
         logging.error(exception)
         sys.exit(1)

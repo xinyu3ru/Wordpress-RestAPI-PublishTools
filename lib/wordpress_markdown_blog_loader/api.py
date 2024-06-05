@@ -9,7 +9,6 @@ from typing import List, Dict, Iterator
 from typing import Optional, Union
 from urllib.parse import urlparse, ParseResult
 import mimetypes
-import numpy
 from functools import cache
 
 

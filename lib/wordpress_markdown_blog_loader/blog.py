@@ -21,6 +21,7 @@ from .remove_newlines import (
 )
 
 
+
 class Blog(object):
     def __init__(self):
         self.dir: Path = None
