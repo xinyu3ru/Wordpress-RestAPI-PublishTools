@@ -40,7 +40,7 @@ class Blog(object):
         if not result.path.exists():
             raise ValueError(f"{path} does not exist")
 
-        with open(path, "r") as f:
+        with open(path, "r", encoding="UTF-8") as f:
             result.blog = frontmatter.load(f)
         return result
 

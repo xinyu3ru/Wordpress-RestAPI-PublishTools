@@ -8,7 +8,7 @@ import os
 import re
 import time
 
-from lib.wordpress_markdown_blog_loader.main import posts
+from lib.wordpress_markdown_blog_loader.upload import upload
 from lib.wordpress_markdown_blog_loader.api import DEFAULT_INFO
 from lib.dir import traversalDir_FirstDir
 
@@ -35,7 +35,7 @@ def insert_index_info_in_readme(insert_info):
     return True
 
 def main():
-    main_host = '--host ' + DEFAULT_INFO['host']
+    main_host = '--host' + DEFAULT_INFO['host']
     base_dir = os.path.dirname(__file__)
     need_post_dir = base_dir + '/need_post'
     os.chdir(need_post_dir)
@@ -44,9 +44,12 @@ def main():
         logging.info("There is no new blog")
         exit()
     for dir in dir_list:
-        m_title, m_link, new_post = posts(['upload', dir, '--host', DEFAULT_INFO['host']])
-        new_info = href_info(m_title, m_link)
-        if new_post:
+        g_title, g_link, g_new_post = '', '', False
+        upload([dir, '--host', DEFAULT_INFO['host']])
+        new_info = href_info(g_title, g_link)
+        print(new_info)
+        
+        if g_new_post:
             insert_index_info_in_readme(new_info)
         source_dir = need_post_dir + '/' + dir
         posted_dir = base_dir + '/posted'

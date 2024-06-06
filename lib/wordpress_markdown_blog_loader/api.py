@@ -43,10 +43,8 @@ DEFAULT_INFO = get_default()
 try:
     if (os.environ["USERNAME"]) and (DEFAULT_INFO['username'] == None):
         DEFAULT_INFO['username'] = os.environ["USERNAME"]
-
     if(os.environ["PASSWORD"]) and (DEFAULT_INFO['PASSWORD'] == None):
         DEFAULT_INFO['password'] = os.environ["PASSWORD"]
-
     if(os.environ["HOST"]) and (DEFAULT_INFO['HOST'] == None):
         DEFAULT_INFO['host'] = os.environ["HOST"]
 except:

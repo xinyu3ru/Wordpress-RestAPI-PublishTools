@@ -24,7 +24,7 @@ def upsert_post(wp: Wordpress, blog: Blog) -> int:
         wp_post = blog.to_wordpress(wp)
         logging.info("updating blog '%s' %s", blog.title, post.link)
         post = wp.update_post(blog.guid, wp_post)
-        new_post = True
+        new_post = False
     else:
         existing_post = wp.get_post_by_slug(blog.slug)
         if existing_post:
@@ -37,7 +37,7 @@ def upsert_post(wp: Wordpress, blog: Blog) -> int:
         blog.guid = post.guid
         blog.save()
         logging.info("uploaded blog '%s' as post %s", blog.title, post.link)
-        new_post = False
+        new_post = True
 
     if blog.og_image:
         og_image = wp.upload_media(f"{blog.slug}-og-banner", blog.og_image_path)
@@ -60,12 +60,12 @@ def upsert_post(wp: Wordpress, blog: Blog) -> int:
         if post.featured_media != banner.medium_id:
             wp.update_post(blog.guid, {"featured_media": banner.medium_id})
 
-    broken = check_links(post.content)
-    for link in broken:
-        logging.warning("broken link in post: %s", broken)
-    logging.info("post available at %s", post.link)
-
-    return blog.title, post.link, new_post
+    # broken = check_links(post.content)
+    # for link in broken:
+    #     logging.warning("broken link in post: %s", broken)
+    # logging.info("post available at %s", post.link)
+    g_title, g_link, g_new_post = blog.title, post.link, new_post
+    return 0 
 
 
 @click.command(name="upload")
@@ -81,7 +81,7 @@ def upsert_post(wp: Wordpress, blog: Blog) -> int:
 @click.argument(
     "blog", type=click.Path(exists=True, file_okay=False, readable=True), required=True
 )
-def command(host: str, blog: str, regenerate_og_image: bool):
+def upload(host: str, blog: str, regenerate_og_image: bool):
     """
     the blog to Wordpress
 
@@ -108,9 +108,10 @@ def command(host: str, blog: str, regenerate_og_image: bool):
     wordpress = Wordpress(host)
     wordpress.connect()
 
-    try:
-        m_title, m_link = upsert_post(wordpress, blog)
-        return m_title, m_link
-    except ValueError as exception:
-        logging.error(exception)
-        sys.exit(1)
+    upsert_post(wordpress, blog)
+    # try:
+    #     upsert_post(wordpress, blog)
+    # except ValueError as exception:
+    #     logging.error(exception)
+    #     #sys.exit(1)
+

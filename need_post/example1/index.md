@@ -2,15 +2,14 @@
 author: xinyu2ru
 categories:
 - uncategorized
-status: publish
-date: 2024-06-05 13:21:00+08:00
+date: 2024-06-05 06:21:00
+excerpt: 这是我做测试的一篇文章，这段文字应该出现在文章摘要。
+image: images/banner.jpg
 og:
   image: images/og-banner.jpg
+slug: zhe-shi-wo-zuo-ce-shi-de-yi-pian-wen-zhang22
 status: publish
-title: 这是我做测试的一篇文章
-image: images/banner.jpg
-excerpt: >-
-  这是我做测试的一篇文章，这段文字应该出现在文章摘要。
+title: 这是我做测试的一篇文章22
 ---
 
 我的博客是 [Rublog](https://rxx0.com/) ，这个地方是文本超链接的实例。我还做了一个 xlsx 转 vCard 通讯录格式的工具网站，网站地址是 [xlsx和vcf转换器](https://xlsx2vcf.kefuxx.com) 。
