@@ -5,7 +5,6 @@ categories:
 date: 2024-06-05 06:22:00
 excerpt: In this blog I would show you how to schedule serverless applications using
   Cloud Run and Cloud Scheduler
-guid: https://test.jnxiboer.cn/wp-json/wp/v2/posts/35
 image: images/banner.jpg
 og:
   image: images/og-banner.jpg
