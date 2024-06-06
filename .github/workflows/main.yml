@@ -5,30 +5,38 @@ on:
       - main
 jobs:
   push:
-      runs-on: ${{ matrix.operating-system }}
-      strategy:
-        matrix:
-          # in this example, there is a newer version already installed, 3.7.7, so the older version will be downloaded
-          operating-system: ['ubuntu-latest']
-          python-version: ["3.10"]
-      steps:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        # in this example, there is a newer version already installed, 3.7.7, so the older version will be downloaded
+        operating-system: ['ubuntu-latest']
+        python-version: ["3.10"]
+    steps:
       - uses: actions/checkout@main # Checking out the repo
+      # GitHub actions 调试助手
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+      # 建立 Python 环境
       - name: Run with setup-python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           update-environment: false
           cache: 'pipenv'
+      # 安装虚拟环境
       - name: Install pipenv
-        run: pip3 install --user pipenv
+        run: pip3 install pipenv
+        # 初始化仓库需要的库文件
       - name: Install dependecies
-        run:  pipenv --python python3 && pipenv install
+        run:  pipenv install
+        # 运行本仓库文件
       - name: Build
         env:
           USERNAME: ${{ secrets.USERNAME }}
           PASSWORD: ${{ secrets.PASSWORD }}
           HOST: ${{ secrets.HOST }}
         run: pipenv run build
+        # 把改动内容推送回 github 仓库
       - name: Commit and push if changed   # 将 README.md 更新到仓库
         run: |
           git diff
