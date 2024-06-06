@@ -16,6 +16,7 @@ click = "*"
 pytz = "*"
 text-unidecode = "*"
 stopwords = "*"
+wordpress-markdown-blog-loader = "*"
 
 [dev-packages]
 

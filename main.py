@@ -8,8 +8,13 @@ import os
 import re
 import time
 
+<<<<<<< HEAD
 from lib.wordpress_markdown_blog_loader.upload import upload
 from lib.wordpress_markdown_blog_loader.api import DEFAULT_INFO
+=======
+from os.path import expanduser
+from wordpress_markdown_blog_loader import posts
+>>>>>>> dev
 from lib.dir import traversalDir_FirstDir
 
 def href_info(title, link):
@@ -34,13 +39,50 @@ def insert_index_info_in_readme(insert_info):
         f.close()
     return True
 
+# 为了使用 wordpress_markdown_blog_loader 这个库，需要把账号密码信息存储到~/.wordpress.ini
+DEFAULT_INFO = {'host':'','username':'','password':''}
+try:
+    if(os.environ["USERNAME"]):
+        DEFAULT_INFO['username'] = os.environ["USERNAME"]
+    if(os.environ["PASSWORD"]):
+        DEFAULT_INFO['password'] = os.environ["PASSWORD"]
+    if(os.environ["HOST"]):
+        DEFAULT_INFO['host'] = os.environ["HOST"]
+except:
+    print("无法获取github的secrets配置信息，无法继续执行后续指令。")
+    exit()
+    
+def save_to_ini():
+    if os.path.exists(expanduser("~/.wordpress.ini")):
+        return
+    else:
+        content = f'''[DEFAULT]
+host = {DEFAULT_INFO['host']}
+
+[{DEFAULT_INFO['host']}]
+username = {DEFAULT_INFO['username']}
+password = {DEFAULT_INFO['password']}'''
+        with open(expanduser("~/.wordpress.ini"), "r+", encoding = "UTF-8") as f:
+            # 将指针移动到文件开头
+            f.seek(0)
+            # 清空文件
+            f.truncate()
+            # 将修改后的内容写入文件
+            f.write(content)
+            # 关闭文件
+            f.close()
+    return
+
 def main():
+<<<<<<< HEAD
     main_host = '--host' + DEFAULT_INFO['host']
+=======
+>>>>>>> dev
     base_dir = os.path.dirname(__file__)
     need_post_dir = base_dir + '/need_post'
     os.chdir(need_post_dir)
     dir_list = traversalDir_FirstDir(need_post_dir)
-    if len(dir_list) <= 0:
+    if type(dir_list) == None:
         logging.info("There is no new blog")
         exit()
     for dir in dir_list:
