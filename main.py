@@ -6,95 +6,56 @@
 import logging
 import os
 import re
+import subprocess
 import time
 
-<<<<<<< HEAD
-from lib.wordpress_markdown_blog_loader.upload import upload
-from lib.wordpress_markdown_blog_loader.api import DEFAULT_INFO
-=======
-from os.path import expanduser
+
 from wordpress_markdown_blog_loader import posts
->>>>>>> dev
-from lib.dir import traversalDir_FirstDir
+from lib.update_readme import href_info, insert_index_info_in_readme
+from lib.util import traversalDir_FirstDir, move_to_work_folder, init_ini
 
-def href_info(title, link):
-    return "<br/><br/><br/>\n\n\n\n## 本文永久更新地址: \n[" + title + "](" + link + ")&emsp; &emsp; " + time.strftime("-%Y-%m-%d-%H:%M",time.localtime())
 
-# 在README.md中插入信息文章索引信息，更容易获取google的收录
-def insert_index_info_in_readme(insert_info):
-    # 替换 ---start---
-    insert_info = "---start---\n## 目录(" + time.strftime('%Y年%m月%d日') + "更新)" +"\n" + insert_info +"\n"
-    with open(os.path.join(os.getcwd(), "README.md"), "r+", encoding="UTF-8") as f:
-        # 读取文件内容
-        content = f.read()
-        # 替换内容
-        content = re.sub(r'---start---.*', insert_info, content)
-        # 将指针移动到文件开头
-        f.seek(0)
-        # 清空文件
-        f.truncate()
-        # 将修改后的内容写入文件
-        f.write(content)
-        # 关闭文件
-        f.close()
-    return True
 
-# 为了使用 wordpress_markdown_blog_loader 这个库，需要把账号密码信息存储到~/.wordpress.ini
-DEFAULT_INFO = {'host':'','username':'','password':''}
-try:
-    if(os.environ["USERNAME"]):
-        DEFAULT_INFO['username'] = os.environ["USERNAME"]
-    if(os.environ["PASSWORD"]):
-        DEFAULT_INFO['password'] = os.environ["PASSWORD"]
-    if(os.environ["HOST"]):
-        DEFAULT_INFO['host'] = os.environ["HOST"]
-except:
-    print("无法获取github的secrets配置信息，无法继续执行后续指令。")
-    exit()
-    
-def save_to_ini():
-    if os.path.exists(expanduser("~/.wordpress.ini")):
-        return
-    else:
-        content = f'''[DEFAULT]
-host = {DEFAULT_INFO['host']}
 
-[{DEFAULT_INFO['host']}]
-username = {DEFAULT_INFO['username']}
-password = {DEFAULT_INFO['password']}'''
-        with open(expanduser("~/.wordpress.ini"), "r+", encoding = "UTF-8") as f:
-            # 将指针移动到文件开头
-            f.seek(0)
-            # 清空文件
-            f.truncate()
-            # 将修改后的内容写入文件
-            f.write(content)
-            # 关闭文件
-            f.close()
-    return
+
 
 def main():
-<<<<<<< HEAD
-    main_host = '--host' + DEFAULT_INFO['host']
-=======
->>>>>>> dev
+    host_server = init_ini()
     base_dir = os.path.dirname(__file__)
     need_post_dir = base_dir + '/need_post'
+    readme_file = base_dir + '/README.md'
     os.chdir(need_post_dir)
     dir_list = traversalDir_FirstDir(need_post_dir)
     if type(dir_list) == None:
         logging.info("There is no new blog")
         exit()
+    shell_command = ''
     for dir in dir_list:
-        g_title, g_link, g_new_post = '', '', False
-        upload([dir, '--host', DEFAULT_INFO['host']])
-        new_info = href_info(g_title, g_link)
-        print(new_info)
+        shell_command = "cd " + need_post_dir + " && python3 -m wordpress_markdown_blog_loader posts upload " + dir +" --host " + host_server
+        p = subprocess.Popen(shell_command, stdout=subprocess.PIPE, shell=True)
+        (output, err) = p.communicate()  
+        p.wait(30)
+        logging.info(output)
+        if 'INFO: uploaded blog' in output:
+            title_list = re.findall("uploaded\sblog\s'(.+?)'\sas", output)
+            if len(title_list):
+                title = title_list[0]
+            link_list = re.findall("as\spost\s(.+?)\n", output)
+            if len(link_list):
+                link = link_list[0]
+            logging.info(title + link)
+            insert_info = href_info(title, link)
+            insert_index_info_in_readme(readme_file, insert_info)
+        shell_command1 = "mv -f " + need_post_dir + '/' + dir + ' ' + base_dir + '/' + 'posted'  + '/' + dir
+        p1 = subprocess.Popen(shell_command1, stdout=subprocess.PIPE, shell=True)
+        # upload([dir, '--host', DEFAULT_INFO['host']])
+        # new_info = href_info(g_title, g_link)
+        # print(new_info)
         
-        if g_new_post:
-            insert_index_info_in_readme(new_info)
-        source_dir = need_post_dir + '/' + dir
-        posted_dir = base_dir + '/posted'
+        # if g_new_post:
+        #     insert_index_info_in_readme(new_info)
+        # source_dir = need_post_dir + '/' + dir
+        # posted_dir = base_dir + '/posted'
 
 if __name__ == "__main__":
     main()

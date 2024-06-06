@@ -34,6 +34,6 @@ jobs:
           git diff
           git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
           git config --global user.name "${{ github.actor }}"
-          git add README.md
+          git add all
           git commit -m "Github Action auto Updated"
           git push
