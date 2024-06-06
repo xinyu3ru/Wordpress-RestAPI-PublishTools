@@ -22,14 +22,15 @@ def get_default_host() -> Optional[str]:
     returns the default api host from ~/.wordpress.ini
     """
     config = configparser.ConfigParser()
-    config.read(expanduser("~/.wordpress.ini"))
+    config.read(expanduser("~/.wordpress.ini"), encoding='utf-8')
     return config.defaults().get("host")
+    
 
 def get_default() -> Optional[dict]:
     """_get_the_default_host_user_and_password_
     """
     config = configparser.ConfigParser()
-    config.read(expanduser("~/.wordpress.ini"))
+    config.read(expanduser("~/.wordpress.ini"), encoding='utf-8')
     default_info = {'host':'','username':'','password':''}
     default_info["host"] = config.defaults().get("host")
     default_info["username"] = config.defaults().get("username")
@@ -40,14 +41,14 @@ def get_default() -> Optional[dict]:
 DEFAULT_INFO = get_default()
 
 try:
-    if(os.environ["USERNAME"]):
+    if (os.environ["USERNAME"]) and (DEFAULT_INFO['username'] == None):
         DEFAULT_INFO['username'] = os.environ["USERNAME"]
 
-    if(os.environ["PASSWORD"]):
+    if(os.environ["PASSWORD"]) and (DEFAULT_INFO['PASSWORD'] == None):
         DEFAULT_INFO['password'] = os.environ["PASSWORD"]
 
-    if(os.environ["HOST"]):
-        DEFAULT_INFO['HOST'] = os.environ["HOST"]
+    if(os.environ["HOST"]) and (DEFAULT_INFO['HOST'] == None):
+        DEFAULT_INFO['host'] = os.environ["HOST"]
 except:
     print("无法获取github的secrets配置信息,开始使用本地变量")
 

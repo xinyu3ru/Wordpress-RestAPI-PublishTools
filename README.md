@@ -20,7 +20,7 @@
 
 - 推广博客站最好的平台是Github；
 
-这个项目可以让你用Markdown写博客，push更新到Github后，Github Actions自动将文章更新到WordPress，并将WordPres站的文章索引更新到Github仓库的README.md，供搜索引擎收录。
+这个项目可以让你用 Markdown 写博客，push 更新到 Github 后，Github Actions 自动将文章更新到 WordPress，并将 WordPress 站的文章索引更新到 Github 仓库的README.md，供搜索引擎收录。
 
 ![image-20210119181051609](https://raw.githubusercontent.com/zhaoolee/WordPressXMLRPCTools/master/README/1611123033557RhdS4nmK.png)
 

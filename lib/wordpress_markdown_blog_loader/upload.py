@@ -4,10 +4,10 @@ import os
 import sys
 
 from difflib import diff_bytes, unified_diff
-from .api import Wordpress, Post
-from .blog import Blog
-from .check_links import check_links
-from slugify import slugify
+from lib.wordpress_markdown_blog_loader.api import Wordpress, Post
+from lib.wordpress_markdown_blog_loader.blog import Blog
+from lib.wordpress_markdown_blog_loader.check_links import check_links
+from slugify import slugify # type: ignore
 
 
 def upsert_post(wp: Wordpress, blog: Blog) -> int:

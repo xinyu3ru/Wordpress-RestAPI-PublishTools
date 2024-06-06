@@ -3,10 +3,11 @@
 发表完成一个，更新一个链接，然后把文件夹复制到posted文件夹，然后删除本文件夹
 """
 
-from pypinyin import pinyin, lazy_pinyin
+import logging
 import os
-import time
 import re
+import time
+
 from lib.wordpress_markdown_blog_loader.main import posts
 from lib.wordpress_markdown_blog_loader.api import DEFAULT_INFO
 from lib.dir import traversalDir_FirstDir
@@ -34,19 +35,20 @@ def insert_index_info_in_readme(insert_info):
     return True
 
 def main():
-    main_host = '--host ' + DEFAULT_INFO['HOST']
+    main_host = '--host ' + DEFAULT_INFO['host']
     base_dir = os.path.dirname(__file__)
     need_post_dir = base_dir + '/need_post'
     os.chdir(need_post_dir)
-    dir_list = traversalDir_FirstDir()
+    dir_list = traversalDir_FirstDir(need_post_dir)
     if len(dir_list) <= 0:
+        logging.info("There is no new blog")
         exit()
     for dir in dir_list:
-        m_title, m_link, new_post = posts('upload', dir, main_host)
+        m_title, m_link, new_post = posts(['upload', dir, '--host', DEFAULT_INFO['host']])
         new_info = href_info(m_title, m_link)
         if new_post:
             insert_index_info_in_readme(new_info)
-        source_dir = need_post_dir + dir
+        source_dir = need_post_dir + '/' + dir
         posted_dir = base_dir + '/posted'
 
 if __name__ == "__main__":

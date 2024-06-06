@@ -1,7 +1,9 @@
 import logging
 import os
 import click
-from . import upload, download, new, check_links
+import lib.wordpress_markdown_blog_loader.upload as upload
+from lib.wordpress_markdown_blog_loader import upload, download, new, check_links
+
 
 
 @click.group()

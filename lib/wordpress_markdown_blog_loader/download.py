@@ -4,8 +4,8 @@ from pathlib import Path
 
 import click
 
-from .api import Wordpress, Post
-from .blog import Blog
+from lib.wordpress_markdown_blog_loader.api import Wordpress, Post
+from lib.wordpress_markdown_blog_loader.blog import Blog
 
 
 @click.command(name="download")

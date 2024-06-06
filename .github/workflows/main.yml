@@ -9,13 +9,14 @@ jobs:
       strategy:
         matrix:
           # in this example, there is a newer version already installed, 3.7.7, so the older version will be downloaded
-          operating-system: ['ubuntu-22.04']
+          operating-system: ['ubuntu-latest']
+          python-version: ["3.12"]
       steps:
-      - uses: actions/checkout@v3 # Checking out the repo
-      - name: Run with setup-python 3.9
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@main # Checking out the repo
+      - name: Run with setup-python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: ${{ matrix.python-version }}
           update-environment: false
           cache: 'pipenv'
       - name: Install pipenv
@@ -26,13 +27,13 @@ jobs:
         env:
           USERNAME: ${{ secrets.USERNAME }}
           PASSWORD: ${{ secrets.PASSWORD }}
-          XMLRPC_PHP: ${{ secrets.XMLRPC_PHP }}
+          HOST: ${{ secrets.HOST }}
         run: pipenv run build
-      - name: Commit and push if changed   # 将.md_sha1 README.md 更新到仓库
+      - name: Commit and push if changed   # 将 README.md 更新到仓库
         run: |
           git diff
-          git config --global user.email "zhaoolee@gmail.com"
-          git config --global user.name "zhaoolee"
-          git add .md_sha1 README.md
+          git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+          git config --global user.name "${{ github.actor }}"
+          git add README.md
           git commit -m "Github Action auto Updated"
           git push

@@ -1,7 +1,7 @@
 import logging
 import os
 import click
-from . import upload, download, new, check_links
+import upload, download, new, check_links
 
 
 @click.group()

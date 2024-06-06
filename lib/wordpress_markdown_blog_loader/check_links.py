@@ -27,7 +27,7 @@ import logging
 
 import click
 
-from wordpress_markdown_blog_loader.api import Wordpress, Post
+from lib.wordpress_markdown_blog_loader.api import Wordpress, Post
 
 
 @click.command(name="check-links")

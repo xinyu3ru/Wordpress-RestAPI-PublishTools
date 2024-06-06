@@ -14,9 +14,9 @@ from PIL import Image
 from binx_og_image_generator import generate as generate_og_image
 from binx_og_image_generator.generator import Blog as ImageGeneratorBlog
 from markdown import markdown
-from .api import Post, Medium
-from .api import Wordpress, WordpressEndpoint
-from .remove_newlines import (
+from lib.wordpress_markdown_blog_loader.api import Post, Medium
+from lib.wordpress_markdown_blog_loader.api import Wordpress, WordpressEndpoint
+from lib.wordpress_markdown_blog_loader.remove_newlines import (
     remove_newlines_from_paragraphs,
 )
 

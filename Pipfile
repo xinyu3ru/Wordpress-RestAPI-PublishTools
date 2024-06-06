@@ -13,6 +13,9 @@ markdownify = "*"
 binx-og-image-generator = "*"
 slugify = "*"
 click = "*"
+pytz = "*"
+text-unidecode = "*"
+stopwords = "*"
 
 [dev-packages]
 

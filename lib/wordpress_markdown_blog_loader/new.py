@@ -5,8 +5,8 @@ from urllib.parse import urlparse
 from pathlib import Path
 from slugify import slugify
 from PIL import Image
-from .blog import Blog
-from .name_to_email import name_to_email
+from lib.wordpress_markdown_blog_loader.blog import Blog
+from lib.wordpress_markdown_blog_loader.name_to_email import name_to_email
 import stopwords
 
 from datetime import datetime, timedelta
