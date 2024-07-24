@@ -8,7 +8,9 @@
 
 ---start---
 
-## 目录(2024年06月05日更新)
+## 目录(2024年07月24日更新)
+
+[测试 python & markdown 自动发布文章](https://www.rxx0.com/software/test-python-and-markdown-to-automatically-publish-articles.html)&emsp; &emsp; 发布时间： 2024-07-24-16:10
 
 ---end---
 
@@ -58,14 +60,17 @@ Github 有一个 secrets 功能，可以将用户名密码等关键信息保护�
 
 ``` tag and category
 ---
-title: 我是标题
-tags: 
-- 我是0号标签关键词
-- 我是1号标签关键词
-- 我是2号标签关键词
+author: xinyu2ru
 categories:
-- 我是1号分类
-- 我是2号分类
+- software
+date: 2024-07-24 08:21:00
+excerpt: 这是我做测试的一篇文章，这段文字应该出现在文章摘要。
+image: images/banner.jpg
+og:
+  image: images/og-banner.jpg
+slug: zhe-shi-wo-zuo-ce-shi-de-yi-pian-wen-zhang22
+status: publish
+title: 这是我做测试的一篇文章22
 ---
 
 ```

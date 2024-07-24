@@ -1,9 +1,10 @@
 ---
 author: xinyu2ru
 categories:
-- uncategorized
+- software
 date: 2024-06-05 06:21:00
 excerpt: 这是我做测试的一篇文章，这段文字应该出现在文章摘要。
+guid: https://www.rxx0.com/wp-json/wp/v2/posts/4088
 image: images/banner.jpg
 og:
   image: images/og-banner.jpg

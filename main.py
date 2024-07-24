@@ -5,22 +5,14 @@
 
 import logging
 import os
-import re
-import subprocess
-import time
 
-
-from wordpress_markdown_blog_loader import posts
+from lib.upload import upload_post
 from lib.update_readme import href_info, insert_index_info_in_readme
-from lib.util import traversalDir_FirstDir, move_to_work_folder, init_ini
-
-
-
-
+from lib.util import traversalDir_FirstDir, move_to_work_folder, init_ini, is_jpg_file, is_png_file
+from lib.compress import compress_pic
 
 
 def main():
-    host_server = init_ini()
     base_dir = os.path.dirname(__file__)
     need_post_dir = base_dir + '/need_post'
     readme_file = base_dir + '/README.md'
@@ -29,33 +21,20 @@ def main():
     if type(dir_list) == None:
         logging.info("There is no new blog")
         exit()
-    shell_command = ''
     for dir in dir_list:
-        shell_command = "cd " + need_post_dir + " && python3 -m wordpress_markdown_blog_loader posts upload " + dir +" --host " + host_server
-        p = subprocess.Popen(shell_command, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()  
-        p.wait(30)
-        logging.info(output)
-        if 'INFO: uploaded blog' in output:
-            title_list = re.findall("uploaded\sblog\s'(.+?)'\sas", output)
-            if len(title_list):
-                title = title_list[0]
-            link_list = re.findall("as\spost\s(.+?)\n", output)
-            if len(link_list):
-                link = link_list[0]
-            logging.info(title + link)
-            insert_info = href_info(title, link)
+        pic_dir = need_post_dir + '/' + dir + '/images'
+        pic_li = traversalDir_FirstDir(pic_dir, False)
+        pic_list = list(pic_dir + '/' + i for i in pic_li)
+        compress_pic(pic_list)
+        (is_sucess, post_title, post_link) =  upload_post(need_post_dir + '/' + dir)
+        if (is_sucess==0):
+            logging.info(f"文章发布状态：sucess, 文章标题：{post_title}, 文章链接：{post_link}。")
+            insert_info = href_info(post_title, post_link)
             insert_index_info_in_readme(readme_file, insert_info)
-        shell_command1 = "mv -f " + need_post_dir + '/' + dir + ' ' + base_dir + '/' + 'posted'  + '/' + dir
-        p1 = subprocess.Popen(shell_command1, stdout=subprocess.PIPE, shell=True)
-        # upload([dir, '--host', DEFAULT_INFO['host']])
-        # new_info = href_info(g_title, g_link)
-        # print(new_info)
-        
-        # if g_new_post:
-        #     insert_index_info_in_readme(new_info)
-        # source_dir = need_post_dir + '/' + dir
-        # posted_dir = base_dir + '/posted'
+            move_to_work_folder((need_post_dir + '/' + dir),(base_dir + '/posted/' + dir))
+        else:
+            logging.info("文章发布状态：failed。")
+
 
 if __name__ == "__main__":
     main()
