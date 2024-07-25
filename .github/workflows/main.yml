@@ -12,17 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@main # Checking out the repo
       # 建立 Python 环境
-      # - name: Run with setup-python 3.12
-      #   uses: actions/setup-python@v5
-      #   with: 
-      #       python-version:  ${{ matrix.python-version }}
-      #       cache: 'pipenv' # caching pipenv dependencies
-      #       cache-dependency-path: Pipfile.lock
-      # # 安装虚拟环境,初始化仓库需要的库文件
-      # - name: Install pipenv
-      #   run: pip install pipenv
-      # - run: pipenv install
-      # - run: pipenv shell
       - name: Install Python, pipenv and Pipfile packages
         uses: palewire/install-python-pipenv-pipfile@v4
         with:
@@ -33,7 +22,7 @@ jobs:
           USERNAME: ${{ secrets.USERNAME }}
           PASSWORD: ${{ secrets.PASSWORD }}
           HOST: ${{ secrets.HOST }}
-        run: pipenv run main.py
+        run: pipenv run python main.py
         # 把改动内容推送回 github 仓库
       - name: Commit and push if changed   # 将 README.md 更新到仓库
         run: |

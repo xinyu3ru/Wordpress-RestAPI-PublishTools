@@ -1,8 +1,10 @@
 # Rublog 博客 Github 仓库
 
-这个项目脱胎于[WordPressXMLRPCTools](https://github.com/zhaoolee/WordPressXMLRPCTools)，这为我提供了思路。
+这个项目脱胎于 [WordPressXMLRPCTools](https://github.com/zhaoolee/WordPressXMLRPCTools) ，这为我提供了思路。
+
 鉴于我不喜欢 xmlrpc ，所以使用 wordpress 的 restAPI 更新。
-更新库来自于[wordpress-markdown-blog-loader](https://github.com/binxio/wordpress-markdown-blog-loader)，部分修改。
+
+WordPress API 库来自于 [wordpress-markdown-blog-loader](https://github.com/binxio/wordpress-markdown-blog-loader)，轻微修改。
 
 [点这里，跳过博客目录看仓库说明](#用github-actions写markdown文章自动更新到wordpress)
 
@@ -22,19 +24,19 @@
 
 - 推广博客站最好的平台是Github；
 
-这个项目可以让你用 Markdown 写博客，push 更新到 Github 后，Github Actions 自动将文章更新到 WordPress，并将 WordPress 站的文章索引更新到 Github 仓库的README.md，供搜索引擎收录。
+这个项目可以让你用 Markdown 写博客，push 更新到 Github 后，Github Actions 自动将文章更新到 WordPress，并将文章网址更新到 README.md。
 
-![image-20210119181051609](https://raw.githubusercontent.com/zhaoolee/WordPressXMLRPCTools/master/README/1611123033557RhdS4nmK.png)
+![repo 说明](posted/readme/images/rxx0_2024-07-25_21-55-47.png)
 
 ### 使用Github Actions 有什么好处？
 
 Github Actions 可以让我们无需安装开发环境，即可完成代码的运行。
 
-![image-20210119180656968](https://raw.githubusercontent.com/zhaoolee/WordPressXMLRPCTools/master/README/1611123033850KpH03KNE.png)
+![github actions 运行](posted/readme/images/rxx0_2024-07-25_22-06-46.png)
 
-对于本项目而言，我可以用手机版Git App，或者Github网页完成新建文章, 然后push到仓库，Github Actions会自动帮我完成相关代码运行，代码可以帮我更新文章到WordPress网站，并生成新的文章目录索引，并自动给你更新到README.md, 供搜索引擎收录。
+只需要新建 Markdown 文章, 然后更新到仓库，Github Actions会自动更新文章到 WordPress，并把文章链接更新到README.md。
 
-![image-20210119180529083](https://raw.githubusercontent.com/zhaoolee/WordPressXMLRPCTools/master/README/1611123033950bTXn7Skr.png)
+![更新文章链接到readme](posted/readme/images/rxx0_2024-07-25_22-09-41.png)
 
 ### 如何保护自己的WordPress账户密码？
 
@@ -46,17 +48,17 @@ Github 有一个 secrets 功能，可以将用户名密码等关键信息保护�
 - WordPress登录密码，变量名为 PASSWORD
 - WordPress的域名，变量名为 HOST
 
-![image-20210119173133800](https://raw.githubusercontent.com/zhaoolee/WordPressXMLRPCTools/master/README/16111230341284PaHwCDm.png)
+![仓库需要的 secret](posted/readme/images/rxx0_2024-07-25_22-12-44.png)
 
 ### 如何新建文章？
 
-在`need_post` 目录下复制 example 目录改名之后继续编辑文件夹下的 `index.md` markdown文件即可
+在`need_post` `posted` 目录下的 example 复制改名之后继续编辑文件夹下的 `index.md` markdown文件即可。
 
-![image-20210119181544158](https://raw.githubusercontent.com/zhaoolee/WordPressXMLRPCTools/master/README/16111230342738acPGWSM.png)
+![如何新建文章](posted/readme/images/rxx0_2024-07-25_22-15-07.png)
 
 ### 文章管理：如何为文章分类/加关键词标签？
 
-在 `.md` 文件顶部填写以下初始化信息，即可完成标题（title），标签（tags），分类（categories）的设置，**其中title为必填项目**（这些关键词不是我定义的，我借用了著名静态博客构建工具 [hexo](https://github.com/hexojs/hexo) 的标准）
+在 `.md` 文件顶部填写以下初始化信息，即可完成标题（title），标签（tags），分类（categories）的设置，**以下内容均为必填项目**。
 
 ``` tag and category
 ---
@@ -64,13 +66,10 @@ author: xinyu2ru
 categories:
 - software
 date: 2024-07-24 08:21:00
-excerpt: 这是我做测试的一篇文章，这段文字应该出现在文章摘要。
+excerpt: 这里写文章的摘要内容，这段文字应该出现在文章摘要。
 image: images/banner.jpg
-og:
-  image: images/og-banner.jpg
-slug: zhe-shi-wo-zuo-ce-shi-de-yi-pian-wen-zhang22
 status: publish
-title: 这是我做测试的一篇文章22
+title: 这里写文章的标题
 ---
 
 ```
@@ -80,35 +79,24 @@ title: 这是我做测试的一篇文章22
 标签(tags)是针对单篇文章的关键词，比如香蕉的标签有 **黄色**，**味甜** （标签是香蕉的属性）
 分类(categories)是本篇文章的归属，比如香蕉的分类为 **水果**，**植物**
 
-![image-20210119182027684](https://raw.githubusercontent.com/zhaoolee/WordPressXMLRPCTools/master/README/1611123034368EXM02d37.png)
-
 ## 如何使用？
 
 完成以上配置后
 
-每次在`_posts` 文件夹新增或更新文章后，运行
+每次在`need_post` 文件夹新增或更新文章后，运行 git 指令即可！
 
 ``` git
 git pull && git add _posts && git commit -m "update" && git push
 ```
 
-![image-20210119182503520](https://raw.githubusercontent.com/zhaoolee/WordPressXMLRPCTools/master/README/1611123034888HbKthGTh.png)
-
-即可！
-
-![image-20210119182653436](https://raw.githubusercontent.com/zhaoolee/WordPressXMLRPCTools/master/README/1611123036038n18wBCfT.png)
+也可以使用 git 管理软件进行提交
 
 ### Github README.md显示效果,（新增的文章排在首位）
 
-![image-20210119184015781](https://raw.githubusercontent.com/zhaoolee/WordPressXMLRPCTools/master/README/16111230361713668ZtFR.png)
-
-### WordPress网站也同步发布了文章
-
-![image-20210119182849720](https://raw.githubusercontent.com/zhaoolee/WordPressXMLRPCTools/master/README/1611123036272XED7hTE0.png)
+![更新文章链接到readme](posted/readme/images/rxx0_2024-07-25_22-09-41.png)
 
 ## 如何用手机完成博客更新操作？
 
-![微信图片_20210119192838](https://raw.githubusercontent.com/zhaoolee/WordPressXMLRPCTools/master/README/1611123036503KhBJRrpj.jpeg)
+锤子便签，可以优雅舒适地写 Markdown 。
 
-用锤子便签，可以优雅舒适地写Markdown，手机App很好用，还有网页版可以用，有5GB的免费空间，能写到锤子倒闭。
-python3 -m wordpress_markdown_blog_loader posts upload example --host test.yourdomain.cn
+Obsidian，也是我现在主要用的编辑软件，电脑和手机均可用。
