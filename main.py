@@ -8,7 +8,7 @@ import os
 
 from lib.upload import upload_post
 from lib.update_readme import href_info, insert_index_info_in_readme
-from lib.util import traversalDir_FirstDir, move_to_work_folder, init_ini, is_jpg_file, is_png_file
+from lib.util import traversalDir_FirstDir, move_to_work_folder
 from lib.compress import compress_pic
 
 
