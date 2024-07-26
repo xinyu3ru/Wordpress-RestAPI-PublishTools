@@ -29,7 +29,7 @@ def traversalDir_FirstDir(path='./need_post', is_rt_dir=True):
         #list.remove('example')
         return list
 
-def move_to_work_folder(work_path, cur_path):
+def move_to_work_folder(cur_path, work_path):
     """
     将work_folder下的所有子目录中的文件移到根目录中：
     :param work_path: 当前工作目录
@@ -38,9 +38,11 @@ def move_to_work_folder(work_path, cur_path):
     """
     for filename in os.listdir(cur_path):
         if os.path.isfile(os.path.join(cur_path, filename)):
+            if not os.path.exists(work_path):
+                os.makedirs(work_path)
             shutil.move(os.path.join(cur_path, filename), os.path.join(work_path, filename))
         elif os.path.isdir(os.path.join(cur_path, filename)):
-            move_to_work_folder(work_path, os.path.join(cur_path, filename))
+            move_to_work_folder(os.path.join(cur_path, filename), os.path.join(work_path, filename))
         else:
             sys.exit("Should never reach here.")
     # remove empty folders

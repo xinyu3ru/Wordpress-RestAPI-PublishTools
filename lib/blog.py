@@ -235,7 +235,7 @@ class Blog(object):
         in_file = str(self.image_path)
 
         if not self.og_image:
-            self.og_image = "images/og-banner.jpg"
+            self.og_image = "images/banner.jpg"
         out_file = str(self.og_image_path)
         logging.info("generating new image in %s", out_file)
         # blog = ImageGeneratorBlog(self.title, self.subtitle, self.author, self.email)
