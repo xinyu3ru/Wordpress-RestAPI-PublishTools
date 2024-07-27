@@ -84,4 +84,5 @@ def upload_post(blog: str):
         return(upsert_post(wordpress, blog))
     except ValueError as exception:
         logging.error(exception)
-        sys.exit(1)
+        return (1, '', '')
+        # sys.exit(1)
