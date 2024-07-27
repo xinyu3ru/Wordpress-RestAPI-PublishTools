@@ -4,7 +4,9 @@ categories:
 - software
 date: 2024-07-28 10:27:52
 excerpt: github actions 是一个很好的工具，但是刚开始使用的时候却很不好调试，这里记录使用 act 调试 github actions 的技巧。
+guid: https://www.rxx0.com/wp-json/wp/v2/posts/4147
 image: images/banner.jpg
+slug: shi-yong-act-diao-shi-github-actions-ji-qiao
 status: publish
 title: 使用 act 调试 github actions 技巧
 ---

@@ -10,7 +10,9 @@ WordPress API 库来自于 [wordpress-markdown-blog-loader](https://github.com/b
 
 ---start---
 
-## 目录(2024年07月26日更新)
+## 目录(2024年07月27日更新)
+
+[使用 act 调试 github actions 技巧](https://www.rxx0.com/?p=4147)&emsp; &emsp; 发布时间： 2024-07-27-04:55
 
 [两种方法解决 sourcetree 通过 ssh 连接 github Permission denied (publickey)问题](https://www.rxx0.com/software/liang-chong-fang-fa-jie-jue-sourcetree-tong-guo-ssh-lian-jie-github-permission-denied-publickey-wen-ti.html)&emsp; &emsp; 发布时间： 2024-07-26-10:58
 
