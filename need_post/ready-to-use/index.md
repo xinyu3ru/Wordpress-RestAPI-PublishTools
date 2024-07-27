@@ -1,10 +1,19 @@
-# Rublog 博客 Github 仓库
+---
+author: xinyu2ru
+categories:
+- software
+date: 2024-07-29 13:08:51
+excerpt: 本文章介绍如何使用github actions 发布 markdown 文章到 WordPress 网站。
+image: images/banner.jpg
+status: publish
+title: 如何使用github actions 发布 markdown 文章到 WordPress 网站
+---
 
-这个项目脱胎于 [WordPressXMLRPCTools](https://github.com/zhaoolee/WordPressXMLRPCTools) ，这为我提供了思路。
+之前我们使用 xmlrpc 发布文章到WordPress。
 
 鉴于我不喜欢 xmlrpc ，所以使用 wordpress 的 restAPI 更新。
 
-WordPress API 库来自于 [wordpress-markdown-blog-loader](https://github.com/binxio/wordpress-markdown-blog-loader)，轻微修改。
+WordPress API 库来自于 wordpress-markdown-blog-loader，轻微修改。
 
 [点这里，跳过博客目录看仓库说明](#用github-actions写markdown文章自动更新到wordpress)
 
