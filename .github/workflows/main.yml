@@ -15,8 +15,8 @@ jobs:
       HOST: ${{ secrets.HOST }}
     steps:
       - uses: actions/checkout@main # Checking out the repo
-      # 建立 libimagequant 环境
-      - name: Install libimagequant
+      # 建立 pngquant 环境
+      - name: Install pngquant
         run: sudo apt install -y pngquant
       # 建立 Python 环境
       - name: Install Python, pipenv and Pipfile packages
@@ -32,6 +32,6 @@ jobs:
           git diff
           git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
           git config --global user.name "${{ github.actor }}"
-          git add all
+          git add -A
           git commit -m "Github Action auto Updated"
           git push
