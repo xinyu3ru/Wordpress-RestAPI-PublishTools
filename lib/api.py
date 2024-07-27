@@ -28,7 +28,7 @@ class WordpressEndpoint:
         self.password = None
         for key in self.__dict__.keys():
             self.__setattr__(key, kwargs[key] if key in kwargs else None)
-        self.read_from_config()
+        self.read_from_config('')
 
     def read_from_config(self, host: str):
         if not host:
