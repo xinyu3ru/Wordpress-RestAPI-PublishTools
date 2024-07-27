@@ -11,6 +11,8 @@ jobs:
         python-version: ["3.12"]
     steps:
       - uses: actions/checkout@main # Checking out the repo
+      # 建立 libimagequant 环境
+      - name: Install libimagequant
         run: sudo apt-get install libimagequant-dev
       # 建立 Python 环境
       - name: Install Python, pipenv and Pipfile packages
