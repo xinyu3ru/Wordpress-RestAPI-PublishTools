@@ -4,7 +4,9 @@ categories:
 - software
 date: 2024-07-29 13:08:51
 excerpt: 本文章介绍如何使用github actions 发布 markdown 文章到 WordPress 网站。
+guid: https://www.rxx0.com/wp-json/wp/v2/posts/4150
 image: images/banner.png
+slug: ru-he-shi-yong-github-actions-fa-bu-markdown-wen-zhang-dao-wordpress-wang-zhan
 status: publish
 title: 如何使用github actions 发布 markdown 文章到 WordPress 网站
 ---
