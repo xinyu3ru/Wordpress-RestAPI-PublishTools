@@ -4,7 +4,7 @@ categories:
 - software
 date: 2024-07-29 13:08:51
 excerpt: 本文章介绍如何使用github actions 发布 markdown 文章到 WordPress 网站。
-image: images/banner.jpg
+image: images/banner.png
 status: publish
 title: 如何使用github actions 发布 markdown 文章到 WordPress 网站
 ---
