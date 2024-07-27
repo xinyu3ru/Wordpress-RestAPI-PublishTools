@@ -9,6 +9,10 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.12"]
+    env:
+      USERNAME: ${{ secrets.USERNAME }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+      HOST: ${{ secrets.HOST }}
     steps:
       - uses: actions/checkout@main # Checking out the repo
       # 建立 libimagequant 环境
@@ -21,10 +25,6 @@ jobs:
           python-version: 3.12
         # 运行本仓库文件
       - name: Post Article
-        env:
-          USERNAME: ${{ secrets.USERNAME }}
-          PASSWORD: ${{ secrets.PASSWORD }}
-          HOST: ${{ secrets.HOST }}
         run: pipenv run python main.py
         # 把改动内容推送回 github 仓库
       - name: Commit and push if changed   # 将 README.md 更新到仓库
