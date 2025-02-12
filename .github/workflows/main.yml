@@ -21,7 +21,24 @@ jobs:
       - uses: actions/checkout@main # Checking out the repo
       # 建立 pngquant 环境
       - name: Install pngquant
-        run: sudo apt install -y pngquant
+        run: |
+          sudo apt-get update 
+          sudo apt install -y pngquant
+      # 验证文泉驿字体是否存在
+      - name: Validate Fonts 
+        id: verify 
+        run: |
+          if [ -f "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"  ]; then 
+            echo "valid=true" >> $GITHUB_OUTPUT 
+          else 
+            echo "valid=false" >> $GITHUB_OUTPUT 
+          fi 
+      # 如果文泉驿字体不存在则强制安装并刷新字体缓存
+      - name: Force Install 
+        if: steps.verify.outputs.valid  != 'true'
+        run: |
+          sudo apt-get install -y fonts-wqy-zenhei 
+          sudo fc-cache -fv 
       # 建立 Python 环境
       - name: Install Python, pipenv and Pipfile packages
         uses: palewire/install-python-pipenv-pipfile@v4

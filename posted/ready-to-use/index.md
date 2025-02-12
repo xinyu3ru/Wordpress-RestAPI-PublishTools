@@ -10,6 +10,7 @@ slug: ru-he-shi-yong-github-actions-fa-bu-markdown-wen-zhang-dao-wordpress-wang-
 status: publish
 title: 如何使用github actions 发布 markdown 文章到 WordPress 网站
 focus-keywords: markdown upload wordpress
+tags: markdown upload wordpress
 ---
 
 之前我们使用 xmlrpc 发布文章到WordPress。

@@ -8,8 +8,9 @@ import os
 
 from lib.upload import upload_post
 from lib.update_readme import href_info, insert_index_info_in_readme
-from lib.util import traversalDir_FirstDir, move_to_work_folder
+from lib.util import traversalDir_FirstDir, move_to_work_folder, ensure_banner, get_random_element
 from lib.compress import compress_pic
+import lib.quotes
 
 logging.getLogger().setLevel(logging.DEBUG)
 os_slash = '\\' if (os.name =='nt') else '/'
@@ -28,6 +29,7 @@ def main():
         pic_li = traversalDir_FirstDir(pic_dir, False)
         pic_list = list(pic_dir + os_slash + '' + i for i in pic_li)
         compress_pic(pic_list)
+        banner_path = ensure_banner(pic_dir, pic_list, banner_size=(720, 405), title=get_random_element(lib.quotes.inspirational_quotes))
         (is_sucess, post_title, post_link) =  upload_post(need_post_dir + os_slash + '' + dir)
         if (is_sucess==0):
             logging.info(f"文章发布状态：sucess, 文章标题：{post_title}, 文章链接：{post_link}。")

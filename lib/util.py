@@ -5,6 +5,8 @@
 import os
 import shutil
 import sys
+import random
+from PIL import Image, ImageDraw, ImageFont
 
 
 def traversalDir_FirstDir(path='./need_post', is_rt_dir=True):
@@ -66,4 +68,92 @@ def convert_mb_kb(bytesize):
             return "%.fKB" % bytesize
         else:
             return "%.2fMB" % (bytesize / 1024)    
+
+
+def ensure_banner(folder_path, image_files, banner_size=(720, 405), title="Default Banner"):
+    banner_path = os.path.join(folder_path, 'banner.png')
+    
+    # 如果 banner.png 已经存在，直接返回
+    if os.path.exists(banner_path):
+        print("banner.png already exists.")
+        return banner_path
+    
+    # 如果图片文件列表不为空，找到最大的图片并缩放
+    if image_files:
+        # 找到最大的图片文件
+        largest_image = max(image_files, key=lambda f: os.path.getsize(os.path.join(folder_path, f)))
+        largest_image_path = os.path.join(folder_path, largest_image)
         
+        # 打开图片并缩放
+        with Image.open(largest_image_path) as img:
+            img.thumbnail(banner_size, Image.ANTIALIAS)
+            img.save(banner_path)
+        
+        print(f"banner.png created from {largest_image}.")
+        return banner_path
+    
+    # 如果图片文件列表为空，使用标题生成 Banner 图片
+    else:
+        # 创建一个空白图片
+        banner = Image.new('RGB', banner_size, color=(97, 98, 98))  # 背景颜色
+        draw = ImageDraw.Draw(banner)
+        
+        # 设置字体（文泉驿字体）
+        try:
+            font_path = "wqy-microhei.ttc"  # 文泉驿字体路径
+            font = ImageFont.truetype(font_path, 40)  # 初始字体大小
+        except IOError:
+            print("文泉驿字体未找到，使用默认字体。")
+            font = ImageFont.load_default()  # 如果字体不存在，使用默认字体
+        
+        # 动态调整字体大小以适应 Banner 图片
+        max_font_size = 100
+        min_font_size = 20
+        padding = 20  # 文字与图片边缘的间距
+        max_text_width = banner_size[0] - 2 * padding  # 最大文字宽度
+        max_text_height = banner_size[1] - 2 * padding  # 最大文字高度
+        
+        # 调整字体大小
+        for font_size in range(max_font_size, min_font_size, -1):
+            font = ImageFont.truetype(font_path, font_size) if font_path else ImageFont.load_default()
+            text_width, text_height = draw.textsize(title, font=font)
+            if text_width <= max_text_width and text_height <= max_text_height:
+                break  # 找到合适的字体大小
+        
+        # 自动换行处理
+        lines = []
+        words = title.split()
+        current_line = words[0]
+        for word in words[1:]:
+            test_line = current_line + " " + word
+            test_width, _ = draw.textsize(test_line, font=font)
+            if test_width <= max_text_width:
+                current_line = test_line
+            else:
+                lines.append(current_line)
+                current_line = word
+        lines.append(current_line)
+        
+        # 计算文字的总高度
+        total_text_height = len(lines) * text_height
+        
+        # 计算文字的起始位置（垂直居中）
+        text_y = (banner_size[1] - total_text_height) // 2
+        
+        # 在图片上绘制每一行文字
+        for line in lines:
+            text_width, _ = draw.textsize(line, font=font)
+            text_x = (banner_size[0] - text_width) // 2  # 水平居中
+            draw.text((text_x, text_y), line, font=font, fill=(255, 255, 255))  # 文字颜色为白色
+            text_y += text_height  # 移动到下一行
+        
+        # 保存生成的 Banner 图片
+        banner.save(banner_path)
+        print(f"banner.png created with title: {title}.")
+        return banner_path
+
+def get_random_element(data_list): 
+    """从非空列表中随机返回一个元素"""
+    if not data_list: 
+        raise ValueError("列表不能为空")
+    return random.choice(data_list)
