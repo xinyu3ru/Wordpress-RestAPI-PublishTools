@@ -100,7 +100,7 @@ def ensure_banner(folder_path, image_files, banner_size=(720, 405), title="Defau
         
         # 设置字体（文泉驿字体）
         try:
-            font_path = "wqy-microhei.ttc"  # 文泉驿字体路径
+            font_path = "wqy-zenhei.ttc"  # 文泉驿字体路径
             font = ImageFont.truetype(font_path, 40)  # 初始字体大小
         except IOError:
             print("文泉驿字体未找到，使用默认字体。")
