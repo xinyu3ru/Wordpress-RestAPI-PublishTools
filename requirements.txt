@@ -1,0 +1,8 @@
+slugify
+beautifulsoup4
+pytz
+requests
+frontmatter
+markdownify
+pillow
+markdown

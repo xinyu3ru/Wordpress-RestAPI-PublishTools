@@ -11,6 +11,7 @@ from lib.update_readme import href_info, insert_index_info_in_readme
 from lib.util import traversalDir_FirstDir, move_to_work_folder
 from lib.compress import compress_pic
 
+logging.getLogger().setLevel(logging.DEBUG)
 os_slash = '\\' if (os.name =='nt') else '/'
 
 def main():

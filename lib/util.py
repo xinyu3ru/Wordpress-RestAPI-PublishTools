@@ -27,7 +27,7 @@ def traversalDir_FirstDir(path='./need_post', is_rt_dir=True):
                     h = os.path.split(m)
                     list.append(h[1])
         #list.remove('example')
-        return list
+    return list
 
 def move_to_work_folder(cur_path, work_path):
     """
