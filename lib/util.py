@@ -105,8 +105,7 @@ def ensure_banner(folder_path, image_files, banner_size=(720, 405), title="Defau
         except IOError:
             print("文泉驿字体未找到，使用默认字体。")
             font = ImageFont.load_default()  # 如果字体不存在，使用默认字体
-        
-        # 动态调整字体大小以适应 Banner 图片
+      # 动态调整字体大小以适应 Banner 图片
         max_font_size = 100
         min_font_size = 20
         padding = 20  # 文字与图片边缘的间距
@@ -116,7 +115,10 @@ def ensure_banner(folder_path, image_files, banner_size=(720, 405), title="Defau
         # 调整字体大小
         for font_size in range(max_font_size, min_font_size, -1):
             font = ImageFont.truetype(font_path, font_size) if font_path else ImageFont.load_default()
-            text_width, text_height = draw.textsize(title, font=font)
+            # 使用 textbbox 计算单行文字的边界框
+            bbox = draw.textbbox((0, 0), title, font=font)
+            text_width = bbox[2] - bbox[0]
+            text_height = bbox[3] - bbox[1]
             if text_width <= max_text_width and text_height <= max_text_height:
                 break  # 找到合适的字体大小
         
@@ -126,7 +128,8 @@ def ensure_banner(folder_path, image_files, banner_size=(720, 405), title="Defau
         current_line = words[0]
         for word in words[1:]:
             test_line = current_line + " " + word
-            test_width, _ = draw.textsize(test_line, font=font)
+            # 使用 textlength 计算当前行的宽度
+            test_width = draw.textlength(test_line, font=font)
             if test_width <= max_text_width:
                 current_line = test_line
             else:
@@ -142,11 +145,13 @@ def ensure_banner(folder_path, image_files, banner_size=(720, 405), title="Defau
         
         # 在图片上绘制每一行文字
         for line in lines:
-            text_width, _ = draw.textsize(line, font=font)
+            # 使用 textbbox 计算当前行的边界框
+            bbox = draw.textbbox((0, 0), line, font=font)
+            text_width = bbox[2] - bbox[0]
             text_x = (banner_size[0] - text_width) // 2  # 水平居中
             draw.text((text_x, text_y), line, font=font, fill=(255, 255, 255))  # 文字颜色为白色
             text_y += text_height  # 移动到下一行
-        
+                
         # 保存生成的 Banner 图片
         banner.save(banner_path)
         print(f"banner.png created with title: {title}.")
