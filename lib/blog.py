@@ -77,15 +77,16 @@ class Blog(object):
     @property
     def focus_keywords(self):
         """
-        yoast focus keywords to determine SEO effectiveness. Can only be uploaded, not
+        Keywords to determine SEO effectiveness. Can only be uploaded, not
         retrieved. You just gotto love WP 😬
         """
         return self.blog.metadata.get("focus-keywords")
 
+
     @focus_keywords.setter
     def focus_keywords(self, value):
         if value:
-            self.blog.metadata["focus-keywords"] = value
+            self.blog.metadata["focus-keywords"] = " ".join(value) if isinstance(value, list) else value
         else:
             self.blog.metadata.pop("focus-keywords", "")
 
@@ -96,6 +97,13 @@ class Blog(object):
     @property
     def author(self):
         return self.blog.metadata.get("author")
+
+    @property
+    def author_id(self):
+        """ useful of the author has multiple user accounts on WP and we are not allowed to read
+        user's email addresses.
+        """
+        return self.blog.metadata.get("author-id")
 
     @author.setter
     def author(self, author):
@@ -249,11 +257,11 @@ class Blog(object):
         # )
 
     @property
-    def banner(self):
+    def banner(self) -> Optional["Image"]:
         return Image.load(self.image_path) if self.image_path else None
 
     @property
-    def og_banner(self):
+    def og_banner(self) -> Optional["Image"]:
         return Image.load(self.og_image_path) if self.og_image_path else None
 
     @property
@@ -355,7 +363,7 @@ class Blog(object):
             self.uploaded_images[filename] = wp.upload_media(slug, path)
 
     def to_wordpress(self, wp: Wordpress) -> dict:
-        author = wp.get_unique_user_by_name(self.author, self.email)
+        author = wp.get_unique_user_by_name(self.author, self.email, self.author_id)
         self.upload_local_images(wp)
         result = {
             "title": self.title,
@@ -381,17 +389,16 @@ class Blog(object):
             )
 
         metadesc = self.og_description if self.og_description else self.excerpt
-        result["meta"] = {
-            "yoast_wpseo_metadesc": metadesc,
-            "yoast_wpseo_opengraph-description": metadesc,
-            "yoast_wpseo_twitter-description": metadesc,
-        }
-
-        if self.canonical:
-            result["meta"]["yoast_wpseo_canonical"] = self.canonical
-
-        if self.focus_keywords:
-            result["meta"]["yoast_wpseo_focuskw"] = self.focus_keywords
+        logging.warning("facebook and twitter description, canonical url and focus keywords can not be set")
+        #result["meta"] = {
+        #     "rank_math_facebook_description": metadesc,
+        #     "rank_math_twitter_description": metadesc,
+        #}
+        # if self.canonical:
+        #     result["meta"]["rank_math_canonical_url"] = self.canonical
+        #
+        # if self.focus_keywords:
+        #     result["meta"]["rank_math_focus_keyword"] = ','.join(self.focus_keywords.split())
 
         return result
 
@@ -424,8 +431,8 @@ class Blog(object):
         blog.slug = post.slug
         blog.status = post.status
         blog.brand = wordpress.endpoint.host
-        blog.canonical = post.get("yoast_head_json", {}).get(
-            "canonical", blog.canonical
+        blog.canonical = post.get("meta", {}).get(
+            "rank_math_canonical_url", blog.canonical
         )
 
         if post.permalink_template and not blog.permalink_template:

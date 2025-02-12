@@ -6,9 +6,11 @@
 import logging
 import mimetypes
 import os
-
+import re
+import sys
 from datetime import datetime
 from functools import cache
+from os.path import expanduser
 from pathlib import Path
 from typing import List, Dict, Iterator
 from typing import Optional, Union
@@ -39,7 +41,6 @@ class WordpressEndpoint:
         self.url = f"https://{self.api_host}/wp-json/wp/v2"
         self.username = os.getenv("USERNAME")
         self.password = os.getenv("PASSWORD")
-
 
     def is_host_for(self, url: Union[str, ParseResult]) -> bool:
         result = url if isinstance(url, ParseResult) else urlparse(url)
@@ -87,6 +88,10 @@ class User(dict):
     @property
     def email(self):
         return self.get("email")
+
+    @property
+    def slug(self):
+        return self.get("slug")
 
 
 class Medium(dict):
@@ -201,16 +206,15 @@ class Post(dict):
         """
         returns urls to the og:image links
         """
-        return list(
-            map(
-                lambda u: urlparse(u["url"]),
-                self.get("yoast_head_json", {}).get("og_image", []),
-            )
-        )
+        result = []
+        for name in ["rank_math_facebook_image", "rank_math_facebook_image"]:
+            if image := self.get("meta", {}).get(name):
+                result.append(urlparse(image))
+        return result
 
     @property
     def og_description(self) -> Optional[str]:
-        return self.get("yoast_head_json", {}).get("og_description")
+        return self.get("meta", {}).get("rank_math_twitter_description")
 
     @property
     def permalink_template(self) -> Optional[str]:
@@ -225,6 +229,7 @@ class PermissionDenied(Exception):
     def __init__(self, msg):
         super().__init__(msg)
 
+
 class Wordpress(object):
     def __init__(self, host: Optional[str] = None):
         self.endpoint = WordpressEndpoint.load(host)
@@ -232,12 +237,12 @@ class Wordpress(object):
         self._media: List[Medium] = {}
         self.headers = {
             "accept": "application/json",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Safari/605.1.15",
         }
         self.session = requests.Session()
 
     @property
-    def auth(self) -> (str, str): # type: ignore
+    def auth(self) -> (str, str):
         return (self.endpoint.username, self.endpoint.password)
 
     @property
@@ -284,29 +289,56 @@ class Wordpress(object):
     def get_user_by_id(self, resource_id: int) -> "User":
         return User(self.get("users", resource_id))
 
-    def get_unique_user_by_name(self, name: str, email: Optional[str]) -> "User":
+    def get_unique_user_by_name(
+        self, name: str, email: Optional[str], author_id: Optional[str]
+    ) -> "User":
 
         user = self.get_user_by_id("me")
         if user and user.name == name:
             return user
 
-
         users = []
         try:
-            users = self.users({"search": name})
+            # The email field is only returned when the context edit is passed.
+            # See: https://developer.wordpress.org/rest-api/reference/users/
+            users = self.users({"search": name, "context": "edit"})
         except PermissionDenied as error:
-            logging.error("You have no permission to search for other users.\n        Make sure your author name '%s' matches your WP display name '%s' or visa versa", name, user.name)
-            exit(1)
+            logging.warning("Permission denied to read user email addresses")
+            users = self.users({"search": name})
 
         if len(users) == 0:
             raise ValueError(f"author '{name}' not found on {self.endpoint.host}")
-        elif len(users) > 1:
-            user = next(filter(lambda u: email and u.email == email, users), None)
-            if not user:
+        elif len(users) == 1:
+            return users[0]
+
+        if user := next(
+            filter(
+                lambda u: (author_id and u.slug == author_id)
+                or (
+                    not author_id
+                    and email
+                    and u.email
+                    and u.email.lower() == email.lower()
+                ),
+                users,
+            ),
+            None,
+        ):
+            return user
+
+        candidates = ", ".join(["{} / {}".format(u.slug, u.email) for u in users])
+        if author_id:
                 raise ValueError(
-                    f"Multiple authors named '{name}' found, none with email {email}"
+                f"Multiple authors named '{name}' found, none with author id {author_id} (possible: {candidates})."
                 )
-        return users[0]
+        elif email:
+            raise ValueError(
+                f"Multiple authors named '{name}' found, but none with email {email}. (possible: {candidates})."
+            )
+        else:
+            raise ValueError(
+                f"Multiple authors named '{name}' found. (possible: {candidates})."
+            )
 
     def posts(self, query: dict = None) -> Iterator["Post"]:
         for p in self.get_all("posts", query):
@@ -337,6 +369,7 @@ class Wordpress(object):
     @cache
     def categories(self) -> Dict[str, int]:
         return {c["slug"]: c["id"] for c in self.get_all("categories")}
+
     @property
     @cache
     def categories_by_id(self) -> Dict[int, str]:
@@ -351,7 +384,6 @@ class Wordpress(object):
     @cache
     def tags_by_id(self) -> Dict[int, str]:
         return {id: slug for slug, id in self.tags.items()}
-
 
     def search_for_image_by_slug(self, slug) -> Optional[Medium]:
         response = self.session.get(

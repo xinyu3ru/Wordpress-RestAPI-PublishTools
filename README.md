@@ -82,6 +82,7 @@ excerpt: 这里写文章的摘要内容，这段文字应该出现在文章摘�
 image: images/banner.jpg
 status: publish
 title: 这里写文章的标题
+focus-keywords: markdown upload wordpress
 ---
 
 ```
@@ -112,3 +113,12 @@ git pull && git add _posts && git commit -m "update" && git push
 锤子便签，可以优雅舒适地写 Markdown 。
 
 Obsidian，也是我现在主要用的编辑软件，电脑和手机均可用。
+
+## Update
+
+SEO 插件由 Yoast 改为 Rank Math
+
+## Wordpress 需要安装的插件（Plugins）
+
+- [Rankmath](https://rankmath.com/wordpress/plugin/seo-suite) SEO插件
+- [REST API Meta Support](https://wordpress.org/plugins/rest-api-meta-support/) Wordpress 接口增强插件

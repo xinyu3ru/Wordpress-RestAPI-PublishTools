@@ -1,0 +1,21 @@
+{
+  "version": "2.0",
+  "clipId": "1738913840",
+  "format": "md",
+  "title": "怎样设置 WinCC Audit？怎样选择 Audit 服务器并创建 Audit 数据库？",
+  "link": "https://support.industry.siemens.com/cs/document/109775427/%E6%80%8E%E6%A0%B7%E8%AE%BE%E7%BD%AE-wincc-audit%EF%BC%9F%E6%80%8E%E6%A0%B7%E9%80%89%E6%8B%A9-audit-%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E5%88%9B%E5%BB%BA-audit-%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9F?dti=0&lc=zh-CN",
+  "category": "default",
+  "tags": [],
+  "created_at": "2025-02-07 15:37:20",
+  "mainPath": "index.md",
+  "paths": [
+    "index.json",
+    "a-title_怎样设置-WinCC-Audit-怎样选择-Audit-服务器并创建-Audit-数据库",
+    "assets/1738913840-ad2112c441c864d3a9b6c0aca491f7f8.png",
+    "assets/1738913840-8698d03effbb890ff4fd50833aaca5c1.png",
+    "assets/1738913840-e9fcb66b47d8c4c666fe0954b4fd85f6.png",
+    "assets/1738913840-eff96ea480b32d032ef00405355aec01.png",
+    "assets/1738913840-8df64a085e83e9576a84ac8ea8ce343f.png",
+    "index.md"
+  ]
+}
