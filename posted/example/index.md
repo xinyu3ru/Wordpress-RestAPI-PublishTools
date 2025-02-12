@@ -13,6 +13,7 @@ slug: try-this-one11
 status: publish
 title: Testing markdown upload through wordpress API11
 focus-keywords: markdown upload wordpress
+tags: markdown upload wordpress
 ---
 
 Google [Cloud Run](https://cloud.google.com/run/) is an easy way to deploy your serverless containerized applications. If you need to run your application periodically, you can use Google [Cloud Scheduler](https://cloud.google.com/scheduler/) to do so. In  this blog I will show you how to configure a schedule for a serverless application using [Terraform](https://www.terraform.io).
