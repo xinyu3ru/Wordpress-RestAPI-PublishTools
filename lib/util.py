@@ -86,7 +86,7 @@ def ensure_banner(folder_path, image_files, banner_size=(720, 405), title="Defau
         
         # 打开图片并缩放
         with Image.open(largest_image_path) as img:
-            img.thumbnail(banner_size, Image.ANTIALIAS)
+            img.thumbnail(banner_size, Image.LANCZOS)
             img.save(banner_path)
         
         print(f"banner.png created from {largest_image}.")
