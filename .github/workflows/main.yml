@@ -3,6 +3,9 @@ on:
   push:
     branches:    
       - main
+    paths:
+      - 'README.md'
+      - 'need_posts/**'
 permissions: 
   actions: write
   contents: write
