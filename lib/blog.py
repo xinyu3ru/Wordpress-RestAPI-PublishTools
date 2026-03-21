@@ -617,7 +617,7 @@ def _code_block_language(code_block: bs4.element.Tag) -> str:
     code_tag = code_block.find("code")
     return next(
         map(
-            lambda l: l.replace("language-", ""),
+            lambda l: l.replace("language-", ""),  # noqa: E741
             filter(
                 lambda c: c.startswith("language-"),
                 code_tag.get("class", []) if code_tag else "",

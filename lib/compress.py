@@ -5,6 +5,7 @@
 
 import logging
 import os
+import subprocess
 import threading
 
 from PIL import Image
@@ -41,11 +42,12 @@ def compress_jpg(path, width=720,quality=85):
     logging.info(f"{ path } , 压缩前：, { str(convert_mb_kb(byteSizeBefore)) }, 压缩后：, { str(convert_mb_kb(byteSizeAfter)) }。")
 
 def compress_png(path):
-    if os.system("pngquant --version") != 0:
-        logging.info("\n未检测到pngquant命令行环境，请参照pngquant官网搭建命令行环境：https://pngquant.org/")
-    else:
+    try:
         cmd = "pngquant 256 --quality=65-80 --skip-if-larger --force --ext .png " + path
-        os.system(cmd)
+        subprocess.run(cmd, shell=True)
+    except subprocess.CalledProcessError:
+        if subprocess.run("pngquant --version", shell=True, check=True):
+            logging.info("\n未检测到pngquant命令行环境，请参照pngquant官网搭建命令行环境：https://pngquant.org/")
 
 # 压缩线程（同步压缩）
 class CompressThread(threading.Thread):

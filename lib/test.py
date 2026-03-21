@@ -4,6 +4,7 @@
 """
 
 import os
+import subprocess
 import platform
 import threading
 
@@ -24,7 +25,7 @@ class CompressThread(threading.Thread):
         # 获得锁
         threadLock.acquire()
         cmd = "pngquant 256 --quality=65-80 --skip-if-larger --force --ext .png " + self.path
-        os.system(cmd)
+        subprocess.run(cmd, shell=True)
         # 重命名后缀
         if self.extension == 'jpg' or self.extension == 'jpeg':
             os.remove(self.path)
@@ -61,9 +62,8 @@ if isNeedExclude == "Y" or isNeedExclude == "y":
     print("当前配置的排除压缩文件夹为：")
     print(excludeDir)
 
-if os.system("pngquant --version") != 0:
-    print("\n未检测到pngquant命令行环境，请参照pngquant官网搭建命令行环境：https://pngquant.org/")
-else:
+
+try:
     dirPath = input("请选择需要压缩的文件夹路径：")
     # 去除输入路径首位空格
     dirPath = dirPath.rstrip()
@@ -94,3 +94,6 @@ else:
     # 开始遍历执行压缩线程
     for thread in threads:
         thread.join()
+except subprocess.CalledProcessError:
+    print("\n未检测到pngquant命令行环境，请参照pngquant官网搭建命令行环境：https://pngquant.org/")
+            

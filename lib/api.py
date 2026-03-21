@@ -312,7 +312,7 @@ class Wordpress(object):
             # The email field is only returned when the context edit is passed.
             # See: https://developer.wordpress.org/rest-api/reference/users/
             users = self.users({"search": name, "context": "edit"})
-        except PermissionDenied as error:
+        except PermissionDenied:
             logging.warning("Permission denied to read user email addresses")
             users = self.users({"search": name})
 
