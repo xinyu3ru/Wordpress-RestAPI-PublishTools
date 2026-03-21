@@ -6,11 +6,8 @@
 import logging
 import mimetypes
 import os
-import re
-import sys
 from datetime import datetime
 from functools import cache
-from os.path import expanduser
 from pathlib import Path
 from typing import List, Dict, Iterator
 from typing import Optional, Union
@@ -75,7 +72,8 @@ class WordpressEndpoint:
 
 class User(dict):
     def __init__(self, u):
-        self.update(u)
+        if u:
+            self.update(u)
 
     @property
     def name(self):
@@ -165,6 +163,18 @@ class Post(dict):
         return self.get("categories", [])
 
     @property
+    def industries_taxonomy(self) -> list[id]:
+        return self.get("industries_taxonomy", [])
+
+    @property
+    def partners_taxonomy(self) -> list[id]:
+        return self.get("partners_taxonomy", [])
+
+    @property
+    def capabilities(self) -> list[id]:
+        return self.get("capabilities", [])
+
+    @property
     def tags(self) -> list[int]:
         return self.get("tags", [])
 
@@ -207,14 +217,14 @@ class Post(dict):
         returns urls to the og:image links
         """
         result = []
-        for name in ["rank_math_facebook_image", "rank_math_facebook_image"]:
+        for name in ["rank_math_twitter_image", "rank_math_facebook_image"]:
             if image := self.get("meta", {}).get(name):
                 result.append(urlparse(image))
         return result
 
     @property
     def og_description(self) -> Optional[str]:
-        return self.get("meta", {}).get("rank_math_twitter_description")
+        return self.get("meta", {}).get("rank_math_facebook_description")
 
     @property
     def permalink_template(self) -> Optional[str]:
@@ -237,12 +247,12 @@ class Wordpress(object):
         self._media: List[Medium] = {}
         self.headers = {
             "accept": "application/json",
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Safari/605.1.15",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/605.1.15 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/605.1.15",
         }
         self.session = requests.Session()
 
     @property
-    def auth(self) -> (str, str):
+    def auth(self) -> (str, str): # type: ignore
         return (self.endpoint.username, self.endpoint.password)
 
     @property
@@ -374,6 +384,37 @@ class Wordpress(object):
     @cache
     def categories_by_id(self) -> Dict[int, str]:
         return {id: slug for slug,id in self.categories.items()}
+
+    @property
+    @cache
+    def industries_taxonomy(self) -> Dict[str, int]:
+        return {c["slug"]: c["id"] for c in self.get_all("industries_taxonomy")}
+
+    @property
+    @cache
+    def industries_taxonomy_by_id(self) -> Dict[str, int]:
+        return  {id: slug for slug, id in self.industries_taxonomy.items()}
+
+    @property
+    @cache
+    def partners_taxonomy(self) -> Dict[str, int]:
+        return {c["slug"]: c["id"] for c in self.get_all("partners_taxonomy")}
+
+    @property
+    @cache
+    def partners_taxonomy_by_id(self) -> Dict[str, int]:
+        return  {id: slug for slug, id in self.partners_taxonomy.items()}
+
+    @property
+    @cache
+    def capabilities(self) -> Dict[str, int]:
+        return {c["slug"]: c["id"] for c in self.get_all("capabilities")}
+
+    @property
+    @cache
+    def capabilities_by_id(self) -> Dict[str, int]:
+        return  {id: slug for slug, id in self.capabilities.items()}
+
 
     @property
     @cache
@@ -532,6 +573,37 @@ class Wordpress(object):
                 category, ",\n ".join(self.categories.keys())
             )
         )
+
+    def get_industry_by_name(self, slug: str) -> str:
+        if slug in self.industries_taxonomy:
+            return self.industries_taxonomy[slug]
+
+        raise ValueError(
+            "invalid industry '{}' try one of\n {}".format(
+                slug, ",\n ".join(self.industries_taxonomy.keys())
+            )
+        )
+
+    def get_partner_by_name(self, slug: str) -> str:
+        if slug in self.partners_taxonomy:
+            return self.partners_taxonomy[slug]
+
+        raise ValueError(
+            "invalid partner '{}' try one of\n {}".format(
+                slug, ",\n ".join(self.partners_taxonomy.keys())
+            )
+        )
+
+    def get_capabilities_by_name(self, slug: str) -> str:
+        if slug in self.capabilities:
+            return self.capabilities[slug]
+
+        raise ValueError(
+            "invalid capability '{}' try one of\n {}".format(
+                slug, ",\n ".join(self.capabilities.keys())
+            )
+        )
+
 
     def get_tag_id_by_name(self, tag: str) -> str:
         if tag in self.tags:

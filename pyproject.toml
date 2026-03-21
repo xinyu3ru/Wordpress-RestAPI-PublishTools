@@ -1,0 +1,15 @@
+[project]
+name = "rublog-publish"
+version = "0.1.0"
+description = "使用 GitHub Actions 自动发布博客的工具"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "markdown>=3.10.2",
+    "markdownify>=1.2.2",
+    "pillow>=12.1.1",
+    "python-frontmatter>=1.1.0",
+    "python-slugify>=8.0.4",
+    "pytz>=2026.1.post1",
+    "requests>=2.32.5",
+]

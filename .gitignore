@@ -13,6 +13,7 @@ __pycache__/
 
 # C extensions
 *.so
+.obsidian
 
 # Distribution / packaging
 .Python
@@ -27,7 +28,7 @@ parts/
 sdist/
 var/
 wheels/
-*.egg-info/
+*.egg-info
 .installed.cfg
 *.egg
 

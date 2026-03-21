@@ -12,38 +12,26 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.12"]
+        python-version: ["3.13"]
     env:
       USERNAME: ${{ secrets.USERNAME }}
       PASSWORD: ${{ secrets.PASSWORD }}
       HOST: ${{ secrets.HOST }}
     steps:
-      - uses: actions/checkout@main # Checking out the repo
+      - uses: actions/checkout@v6 # Checking out the repo
       # 建立 pngquant 环境
       - name: Install pngquant
-        run: |
-          sudo apt-get update 
-          sudo apt install -y pngquant
-      # 验证文泉驿字体是否存在
-      - name: Validate Fonts 
-        id: verify 
-        run: |
-          if [ -f "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"  ]; then 
-            echo "valid=true" >> $GITHUB_OUTPUT 
-          else 
-            echo "valid=false" >> $GITHUB_OUTPUT 
-          fi 
-      # 如果文泉驿字体不存在则强制安装并刷新字体缓存
-      - name: Force Install 
-        if: steps.verify.outputs.valid  != 'true'
-        run: |
-          sudo apt-get install -y fonts-wqy-zenhei 
-          sudo fc-cache -fv 
+        run: sudo apt install -y pngquant
       # 建立 Python 环境
       - name: Install Python, pipenv and Pipfile packages
-        uses: palewire/install-python-pipenv-pipfile@v4
+        uses: actions/setup-python@v6
         with:
-          python-version: 3.12
+          python-version: '3.13' 
+          cache: 'pip' # caching pip dependencies
+      - name: Install pipenv
+        run: curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python
+      - name: Install dependencies
+        run: pipenv install
         # 运行本仓库文件
       - name: Post Article
         run: pipenv run python main.py

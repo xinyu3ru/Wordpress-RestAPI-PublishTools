@@ -51,12 +51,14 @@ def move_to_work_folder(cur_path, work_path):
     if cur_path != work_path:
         os.rmdir(cur_path)
 
-is_jpg_file = lambda x: any(x.endswith(extension)
-                            for extension in ['.jpg', '.JPG', 'Jpg', 'Jpeg', 'JPEG', 'jpeg',
-                                              '.bmp', '.BMP', '.Bmp'])
+def is_jpg_file(x):
+    return any(x.endswith(extension)
+               for extension in ['.jpg', '.JPG', 'Jpg', 'Jpeg', 'JPEG', 'jpeg',
+                                 '.bmp', '.BMP', '.Bmp'])
 
-is_png_file = lambda x: any(x.endswith(extension)
-                            for extension in ['.png', '.PNG', 'Png', 'PNg', 'pNG'])
+def is_png_file(x):
+    return any(x.endswith(extension)
+               for extension in ['.png', '.PNG', 'Png', 'PNg', 'pNG'])
 
 def convert_mb_kb(bytesize):
     """
