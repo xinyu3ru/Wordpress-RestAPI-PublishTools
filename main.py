@@ -21,7 +21,7 @@ def main():
     readme_file = base_dir + os_slash + 'README.md'
     os.chdir(need_post_dir)
     dir_list = traversalDir_FirstDir(need_post_dir)
-    if type(dir_list) == None:
+    if type(dir_list) is None:
         logging.info("There is no new blog")
         exit()
     for dir in dir_list:
